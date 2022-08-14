@@ -1,0 +1,162 @@
+<template>
+  <div>
+    <div v-if="loading" class="text-center">Loading...</div>
+    <section v-else class="container px-6 sm:px-40 my-10">
+      <div class="block sm:flex gap-8">
+        <!-- <div class="flex flex-col-reverse sm:flex-row gap-6"> -->
+        <!-- <div class="flex justify-center sm:block w-full sm:w-[15%]">
+            <img class="w-14 sm:w-full border" src="img/chairs/2.jpg" alt="" />
+            <img class="w-14 sm:w-full border" src="img/chairs/3.jpg" alt="" />
+          </div> -->
+        <!-- </div> -->
+        <div class="max-h-96 w-[25rem] overflow-hidden">
+          <img
+            class="border w-full h-full bg-cover object-cover"
+            src="https://images.unsplash.com/photo-1592078615290-033ee584e267?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
+            alt=""
+          />
+        </div>
+        <div class="mt-6 sm:mt-0">
+          <h3 class="text-slate-700 text-2xl font-bold">
+            {{ product.title }}
+          </h3>
+          <div class="flex items-center">
+            <h4 class="text-base text-slate-700">Terjual .</h4>
+            <img class="ml-2 w-4 mr-1" src="img/icons/star.svg" alt="star" />
+            <p class="text-base text-slate-700 mt-1">4.8</p>
+            <p class="text-base text-slate-700 mt-1 ml-2">(289 Ulasan)</p>
+          </div>
+          <div class="mt-4">
+            <h3 class="text-2xl text-slate-700 font-bold">
+              Rp. {{ product.price - (product.price * product.discount) / 100 }}
+            </h3>
+            <div>
+              <span
+                class="px-1 text-red-500 rounded bg-red-100 mt-1 inline-block"
+                >{{ product.discount }}%</span
+              >
+              <span class="text-sm text-slate-600 ml-3 line-through">{{
+                product.price
+              }}</span>
+            </div>
+          </div>
+          <div class="w-80 mt-6">
+            <h3>Atur Pesanan</h3>
+            <div
+              class="my-4 border rounded border-green-600 inline-block px-3 select-none"
+            >
+              <span @click="minusItem(item.count)" class="cursor-pointer"
+                >-</span
+              >
+              <input
+                class="text-center"
+                size="1"
+                v-model="item.count"
+                min="0"
+                type="text"
+              />
+              <span
+                @click="product.stock > item.count ? addItem(item.count) : null"
+                class="cursor-pointer"
+                >+</span
+              >
+            </div>
+            <span class="ml-3 select-none">Stock : {{ product.stock }}</span>
+            <h4 class="line-through text-slate-500 text-right text-sm">
+              {{ product.price }}
+            </h4>
+            <div class="flex justify-between items-center">
+              <h5 class="text-slate-700 text-base">Subtotal :</h5>
+              <h4 class="text-xl text-slate-800 font-bold">
+                Rp.
+                {{ product.price - (product.price * product.discount) / 100 }}
+              </h4>
+            </div>
+            <div class="flex gap-2 justify-between mt-2">
+              <button
+                class="w-1/2 py-2 rounded border border-green-600 text-green-600"
+              >
+                Beli
+              </button>
+              <button class="w-1/2 py-2 rounded bg-green-600 text-white">
+                + Keranjang
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10">
+        <h2
+          class="text-slate-700 mb-4 sm:pt-0 pt-5 sm:border-none border-t border-gray-500 text-2xl font-medium"
+        >
+          Detail Produk & Spesifikasi
+        </h2>
+        <p>{{ product.detail_product }}</p>
+      </div>
+    </section>
+
+    <!-- <section class="mt-10">
+      <div class="container px-6 sm:px-56">
+        <h2
+          class="text-slate-700 mb-4 text-2xl font-medium sm:pt-0 pt-5 sm:border-none border-t border-gray-500"
+        >
+          Ulasan
+        </h2>
+      </div>
+    </section> -->
+  </div>
+</template>
+
+<script setup>
+import { computed, ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import store from "../store";
+
+const route = useRoute();
+
+const loading = computed(() => store.state.currentProduct.loading);
+
+// // Create empty survey
+let product = ref({
+  title: "",
+  slug: "",
+  price: null,
+  discount: null,
+  stock: null,
+  sold: null,
+  detail_product: "",
+  created: "",
+});
+
+let item = ref({
+  count: 12,
+});
+
+// // Watch to current survey data change and when this happens we update local model
+watch(
+  () => store.state.currentProduct.data.data,
+  (newVal, oldVal) => {
+    product.value = {
+      ...JSON.parse(JSON.stringify(newVal)),
+    };
+  }
+);
+
+if (route.params.slug) {
+  store.dispatch("getProduct", route.params.slug);
+}
+
+function addItem(val) {
+  item.value = {
+    count: parseInt(val) + 1,
+  };
+}
+
+function minusItem(val) {
+  if (val > 1) {
+    item.value = {
+      count: parseInt(val) - 1,
+    };
+  }
+}
+</script>
