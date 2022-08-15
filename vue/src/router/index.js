@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import DefaultLayout from "../components/DefaultLayout.vue";
-import Home from "../views/Home.vue";
 import Product from "../views/Product.vue";
+import Blog from "../views/BlogView.vue";
+import Cart from "../views/Cart.vue";
 import review from "../views/review.vue";
 import view from "../views/view.vue";
 import Login from "../views/Login.vue";
@@ -9,17 +10,32 @@ import Register from "../views/Register.vue";
 import AuthLayout from "../components/AuthLayout.vue";
 import store from "../store";
 
+function lazyLoad(view) {
+    return () => import(`../views/${view}.vue`);
+}
+
 const routes = [
     {
         path: "/",
         component: DefaultLayout,
         meta: { requiresAuth: true },
         children: [
-            { path: "/", name: "Home", component: Home },
-            { path: "/:slug", name: "ProductView", component: Product },
+            {
+                path: "/",
+                name: "Home",
+                component: lazyLoad("Home"),
+            },
+            { path: "/product/:slug", name: "ProductView", component: Product },
+            { path: "/blog/:slug", name: "BlogView", component: Blog },
             { path: "/review", name: "review", component: review },
             { path: "/view", name: "view", component: view },
         ],
+    },
+    {
+        path: "/cart",
+        name: "Cart",
+        component: Cart,
+        meta: { requiresAuth: true },
     },
     {
         path: "/auth",
@@ -46,6 +62,10 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes,
+    scrollBehavior(to, from, savedPosition) {
+        // always scroll to top
+        return { top: 0, behavior: "smooth" };
+    },
 });
 
 router.beforeEach((to, from, next) => {

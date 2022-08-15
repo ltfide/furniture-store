@@ -1,7 +1,7 @@
 <template>
   <header>
     <nav class="bg-white border-b border-gray-300">
-      <div class="container px-4 sm:px-8">
+      <div class="px-4 sm:px-8">
         <nav class="flex justify-between items-center text-sm">
           <div class="">
             <a href="" class="px-2 py-1 bg-green-500 rounded text-white"
@@ -9,41 +9,55 @@
             >
             <span class="hidden sm:inline ml-4">Get Special discount</span>
           </div>
-          <div class="">
-            <ul class="flex border-gray-300">
-              <li
-                class="border-x-[1px] flex gap-2 items-center p-2 border-gray-300"
-              >
-                <img class="w-5" src="./../../img/icons/en.svg" alt="en" />
-                <span>En</span>
-              </li>
-              <li
-                class="border-r-[1px] flex gap-2 items-center p-2 border-gray-300"
-              >
-                <img class="w-5" src="./../../img/icons/id.svg" alt="id" />
-                <span>Id</span>
-              </li>
-              <li
-                class="hidden sm:block uppercase border-r-[1px] p-2 border-gray-300"
-              >
+          <div class="flex">
+            <div v-if="user.name" class="py-1 cursor-pointer group">
+              <div class="flex gap-2 items-center">
                 <h3
-                  v-if="user.name"
                   class="flex justify-center items-center w-7 text-center h-7 text-white font-semibold rounded-full bg-sky-400"
                 >
                   {{ user.name.charAt(0) }}
                 </h3>
-                <router-link v-else to="/login"
-                  >Register or Sign In</router-link
+                <p class="text-slate-600 font-semibold">{{ user.name }}</p>
+              </div>
+              <div
+                class="absolute top-0 mt-9 right-0 rounded shadow bg-white py-4 mr-4 hidden group-hover:block"
+              >
+                <ul class="flex flex-col">
+                  <li class="hover:bg-gray-200 px-4 py-2">Pesanan saya</li>
+                  <li class="hover:bg-gray-200 px-4 py-2">Pengaturan akun</li>
+                  <li class="hover:bg-gray-200 px-4 py-2">
+                    <a href="" @click="logout">Logout</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div v-else>
+              <ul class="flex border-gray-300">
+                <li
+                  class="hidden sm:block uppercase border-r-[1px] p-2 border-gray-300"
                 >
-              </li>
-            </ul>
+                  <router-link
+                    class="px-3 py-1 bg-green-500 text-white text-sm rounded"
+                    to="/login"
+                    >Login</router-link
+                  >
+                </li>
+                <li
+                  class="hidden sm:block uppercase border-r-[1px] p-2 border-gray-300"
+                >
+                  <router-link
+                    class="px-3 py-1 bg-white border border-green-500 text-green-500 text-sm rounded"
+                    to="/register"
+                    >Register</router-link
+                  >
+                </li>
+              </ul>
+            </div>
           </div>
         </nav>
       </div>
     </nav>
-    <nav
-      class="container px-4 sm:px-8 py-4 flex justify-between items-center shadow"
-    >
+    <nav class="px-4 sm:px-8 py-4 flex justify-between items-center shadow">
       <div class="w-36" id="logo">
         <router-link to="/">
           <img class="w-full" src="./../../img/logo.png" alt="logo"
@@ -94,8 +108,18 @@
 <script setup>
 import { computed } from "@vue/runtime-core";
 import store from "../../store";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const user = computed(() => store.state.user.data);
 
 store.dispatch("getUser");
+
+function logout(ev) {
+  ev.preventDefault();
+  store.dispatch("logout").then(() => {
+    router.go();
+  });
+}
 </script>

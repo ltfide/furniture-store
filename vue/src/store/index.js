@@ -17,6 +17,14 @@ const store = createStore({
             loading: false,
             data: {},
         },
+        blogs: {
+            loading: false,
+            data: {},
+        },
+        currentBlogs: {
+            loading: false,
+            data: {},
+        },
     },
     actions: {
         increment({ commit }) {
@@ -32,6 +40,12 @@ const store = createStore({
             return axiosClient.post("/login", user).then(({ data }) => {
                 commit("setUser", data.user);
                 commit("setToken", data.token);
+            });
+        },
+        logout({ commit }) {
+            return axiosClient.post("/logout").then((res) => {
+                commit("setLogout");
+                return res;
             });
         },
         getUser({ commit }) {
@@ -55,8 +69,21 @@ const store = createStore({
                 return res;
             });
         },
+        getBlogData({ commit }) {
+            commit("blogLoading", true);
+            return axiosClient.get("/blogs").then((res) => {
+                commit("blogLoading", false);
+                commit("setBlogData", res.data);
+                return res;
+            });
+        },
     },
     mutations: {
+        setLogout: (state) => {
+            state.user.data = null;
+            state.user.token = null;
+            sessionStorage.removeItem("TOKEN");
+        },
         setincrement(state) {
             state.count++;
         },
@@ -78,6 +105,12 @@ const store = createStore({
         },
         setCurrentProduct: (state, data) => {
             state.currentProduct.data = data;
+        },
+        blogLoading: (state, data) => {
+            state.blogs.loading = data;
+        },
+        setBlogData: (state, data) => {
+            state.blogs.data = data;
         },
     },
 });

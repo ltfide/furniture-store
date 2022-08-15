@@ -28,7 +28,7 @@
           </div>
           <div class="mt-4">
             <h3 class="text-2xl text-slate-700 font-bold">
-              Rp. {{ product.price - (product.price * product.discount) / 100 }}
+              Rp. {{ discount.toFixed(3) }}
             </h3>
             <div>
               <span
@@ -45,31 +45,43 @@
             <div
               class="my-4 border rounded border-green-600 inline-block px-3 select-none"
             >
-              <span @click="minusItem(item.count)" class="cursor-pointer"
-                >-</span
+              <button
+                @click="minusItem"
+                class="cursor-pointer"
+                :disabled="count <= 1"
+                :class="count <= 1 ? 'text-gray-400' : ''"
               >
+                -
+              </button>
               <input
-                class="text-center"
+                class="text-center border-none outline-none"
                 size="1"
-                v-model="item.count"
-                min="0"
+                @input="inputItem"
+                :value="count"
+                min="1"
                 type="text"
               />
-              <span
-                @click="product.stock > item.count ? addItem(item.count) : null"
+              <button
+                @click="addItem"
                 class="cursor-pointer"
-                >+</span
+                :disabled="count >= product.stock"
+                :class="count >= product.stock ? 'text-gray-400' : ''"
               >
+                +
+              </button>
             </div>
             <span class="ml-3 select-none">Stock : {{ product.stock }}</span>
             <h4 class="line-through text-slate-500 text-right text-sm">
-              {{ product.price }}
+              {{ total || product.price }}
             </h4>
             <div class="flex justify-between items-center">
               <h5 class="text-slate-700 text-base">Subtotal :</h5>
               <h4 class="text-xl text-slate-800 font-bold">
-                Rp.
-                {{ product.price - (product.price * product.discount) / 100 }}
+                Rp. {{ (discount * count).toFixed(3) }}
+                <!-- {{
+                  total - (total * product.discount) / 100 ||
+                  product.price - (product.price * product.discount) / 100
+                }} -->
               </h4>
             </div>
             <div class="flex gap-2 justify-between mt-2">
@@ -128,9 +140,12 @@ let product = ref({
   created: "",
 });
 
-let item = ref({
-  count: 12,
-});
+const count = ref(1);
+const total = ref(0);
+let discount = computed(
+  () =>
+    product.value.price - (product.value.price * product.value.discount) / 100
+);
 
 // // Watch to current survey data change and when this happens we update local model
 watch(
@@ -146,17 +161,28 @@ if (route.params.slug) {
   store.dispatch("getProduct", route.params.slug);
 }
 
-function addItem(val) {
-  item.value = {
-    count: parseInt(val) + 1,
-  };
+function inputItem(e) {
+  e.target.value = parseInt(e.target.value) || 0;
+  count.value = parseInt(e.target.value) || 0;
+  if (e.target.value >= product.value.stock) {
+    e.target.value = product.value.stock;
+    count.value = product.value.stock;
+  }
+
+  if (e.target.value <= 0) {
+    e.target.value = 0;
+    count.value = 0;
+  }
+  total.value = count.value * product.value.price;
 }
 
-function minusItem(val) {
-  if (val > 1) {
-    item.value = {
-      count: parseInt(val) - 1,
-    };
-  }
+function addItem() {
+  count.value++;
+  total.value = count.value * product.value.price;
+}
+
+function minusItem() {
+  count.value--;
+  total.value = count.value * product.value.price;
 }
 </script>

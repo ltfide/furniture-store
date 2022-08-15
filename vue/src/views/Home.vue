@@ -158,6 +158,7 @@
       </div>
     </section>
     <router-link to="/review">review</router-link>
+
     <PostCard />
   </div>
 </template>
@@ -165,8 +166,6 @@
 <script setup>
 import ProductCard from "../components/ProductCard.vue";
 import PostCard from "../components/PostCard.vue";
-import store from "../store";
-import { computed } from "@vue/runtime-core";
 </script>
 
 <style></style>
