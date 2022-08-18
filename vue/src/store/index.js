@@ -17,6 +17,10 @@ const store = createStore({
             loading: false,
             data: {},
         },
+        cart: {
+            loading: false,
+            data: {},
+        },
         blogs: {
             loading: false,
             data: {},
@@ -40,6 +44,7 @@ const store = createStore({
             return axiosClient.post("/login", user).then(({ data }) => {
                 commit("setUser", data.user);
                 commit("setToken", data.token);
+                return data;
             });
         },
         logout({ commit }) {
@@ -77,6 +82,14 @@ const store = createStore({
                 return res;
             });
         },
+        getProductCart({ commit }) {
+            commit("cartLoading", true);
+            return axiosClient.get("/product-cart").then((res) => {
+                commit("cartLoading", false);
+                commit("setProductCart", res.data.data[0]);
+                return res;
+            });
+        },
     },
     mutations: {
         setLogout: (state) => {
@@ -111,6 +124,12 @@ const store = createStore({
         },
         setBlogData: (state, data) => {
             state.blogs.data = data;
+        },
+        cartLoading: (state, data) => {
+            state.cart.loading = data;
+        },
+        setProductCart: (state, data) => {
+            state.cart.data = data;
         },
     },
 });

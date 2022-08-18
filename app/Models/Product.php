@@ -20,4 +20,9 @@ class Product extends Model
     {
         return 'slug';
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

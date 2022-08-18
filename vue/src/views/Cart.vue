@@ -26,49 +26,35 @@
               >Pilih Semua</label
             >
           </div>
-          <div
-            class="mt-3 flex gap-3 items-center border-b border-gray-300 pb-3"
-          >
-            <input type="checkbox" />
-            <img class="w-24" src="../img/chairs/1.jpg" alt="gambar" />
-            <div class="w-full">
-              <h3 class="text-slate-700 text-base font-medium">
-                Lomo kursi kantor sandaran rendah - hitam
-              </h3>
-              <h5 class="text-sm text-slate-600 mb-3">color: Hitam</h5>
-              <div class="flex justify-between items-center">
-                <h3 class="text-slate-700 text-base font-medium">Rp758.000</h3>
-                <div class="flex gap-7">
-                  <img src="../img/icons/delete.svg" alt="delete" />
-                  <div
-                    class="my-4 border rounded border-green-600 inline-block px-3"
-                  >
-                    <span>-</span>
-                    <input class="text-center" size="1" value="0" type="text" />
-                    <span>+</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="mt-3 flex gap-3 items-center">
-            <input type="checkbox" />
-            <img class="w-24" src="../img/chairs/1.jpg" alt="gambar" />
-            <div class="w-full">
-              <h3 class="text-slate-700 text-base font-medium">
-                Lomo kursi kantor sandaran rendah - hitam
-              </h3>
-              <h5 class="text-sm text-slate-600 mb-3">color: Hitam</h5>
-              <div class="flex justify-between items-center">
-                <h3 class="text-slate-700 text-base font-medium">Rp758.000</h3>
-                <div class="flex gap-7">
-                  <img src="../img/icons/delete.svg" alt="delete" />
-                  <div
-                    class="my-4 border rounded border-green-600 inline-block px-3"
-                  >
-                    <span>-</span>
-                    <input class="text-center" size="1" value="0" type="text" />
-                    <span>+</span>
+          <div v-for="cart in carts" :key="cart">
+            <div
+              class="mt-3 flex gap-3 items-center border-b border-gray-300 pb-3"
+            >
+              <input type="checkbox" />
+              <img class="w-24" src="../img/chairs/1.jpg" alt="gambar" />
+              <div class="w-full">
+                <h3 class="text-slate-700 text-base font-medium">
+                  {{ cart.title }}
+                </h3>
+                <h5 class="text-sm text-slate-600 mb-3">color: Hitam</h5>
+                <div class="flex justify-between items-center">
+                  <h3 class="text-slate-700 text-base font-medium">
+                    Rp{{ cart.price }}
+                  </h3>
+                  <div class="flex gap-7">
+                    <img src="../img/icons/delete.svg" alt="delete" />
+                    <div
+                      class="my-4 border rounded border-green-600 inline-block px-3"
+                    >
+                      <span>-</span>
+                      <input
+                        class="text-center"
+                        size="1"
+                        value="0"
+                        type="text"
+                      />
+                      <span>+</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -99,3 +85,12 @@
     </section>
   </div>
 </template>
+
+<script setup>
+import { computed } from "@vue/runtime-core";
+import store from "../store";
+
+const carts = computed(() => store.state.cart.data);
+
+store.dispatch("getProductCart");
+</script>

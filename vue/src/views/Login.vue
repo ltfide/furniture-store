@@ -18,6 +18,17 @@
           </router-link>
         </p>
       </div>
+      <div
+        v-if="errorMsg"
+        class="flex items-center transition-all duration-1000 justify-between p-3 w-full bg-red-500 text-white rounded shadow"
+      >
+        <p class="">
+          {{ errorMsg }}
+        </p>
+        <p @click="errorMsg = ''" class="cursor-pointer hover:text-red-100">
+          X
+        </p>
+      </div>
       <form class="mt-8 space-y-6" @submit="login">
         <input type="hidden" name="remember" value="true" />
         <div class="rounded-md shadow-sm -space-y-px">
@@ -95,19 +106,26 @@
 import { LockClosedIcon } from "@heroicons/vue/solid";
 import store from "../store";
 import { useRouter } from "vue-router";
+import { ref } from "@vue/reactivity";
 
 const router = useRouter();
 const user = {
   email: "",
   password: "",
 };
+let errorMsg = ref("");
 
 function login(ev) {
   ev.preventDefault();
 
-  store.dispatch("login", user).then(() => {
-    router.push({ name: "Home" });
-  });
+  store
+    .dispatch("login", user)
+    .then(() => {
+      router.push({ name: "Home" });
+    })
+    .catch((err) => {
+      errorMsg.value = err.response.data.message;
+    });
 }
 </script>
 

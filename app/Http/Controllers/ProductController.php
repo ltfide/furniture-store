@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Http\Resources\CartResource;
 use App\Http\Resources\ProductResource;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -19,6 +22,17 @@ class ProductController extends Controller
     {
         $products = Product::latest()->paginate(4);
         return ProductResource::collection($products);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function productCart()
+    {
+        $user = User::where('id', Auth::id())->get();
+        return CartResource::collection($user);
     }
 
     /**

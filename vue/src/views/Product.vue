@@ -22,7 +22,7 @@
           </h3>
           <div class="flex items-center">
             <h4 class="text-base text-slate-700">Terjual .</h4>
-            <img class="ml-2 w-4 mr-1" src="img/icons/star.svg" alt="star" />
+            <img class="ml-2 w-4 mr-1" src="../img/icons/star.svg" alt="star" />
             <p class="text-base text-slate-700 mt-1">4.8</p>
             <p class="text-base text-slate-700 mt-1 ml-2">(289 Ulasan)</p>
           </div>

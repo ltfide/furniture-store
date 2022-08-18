@@ -36,15 +36,15 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|min:3',
-            'password' => 'required'
+            'password' => 'required|min:3'
         ]);
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user && !Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response([
+                'message' => 'Email atau Password salah'
+            ], 422);
         }
 
         $token = $user->createToken('main')->plainTextToken;
