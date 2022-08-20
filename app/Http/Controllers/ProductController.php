@@ -7,9 +7,11 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\ProductResource;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -18,21 +20,29 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $products = Product::latest()->paginate(4);
+        if ($request->query('category')) {
+            $products = Product::join('categories', 'category_id', '=', 'categories.id')
+                                ->where('categories.name', $request->query('category'))
+                                ->select('products.*')
+                                ->limit(4)
+                                ->latest()
+                                ->get();
+        }
         return ProductResource::collection($products);
     }
 
     /**
-     * Display a listing of the resource.
+     * Get Product by Category
      *
      * @return \Illuminate\Http\Response
      */
-    public function productCart()
+    public function getProductByCategory(Request $request)
     {
-        $user = User::where('id', Auth::id())->get();
-        return CartResource::collection($user);
+        $products = Category::where('name', $request->query('category'))->get();
+        return $products;
     }
 
     /**

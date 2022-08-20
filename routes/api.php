@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -31,7 +32,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/product-cart', [ProductController::class, 'productCart'])->middleware(['auth:sanctum']);
+
+Route::get('/carts', [CartController::class, 'index'])->middleware(['auth:sanctum']);
+Route::post('/add-to-cart', [CartController::class, 'addToCart'])->middleware(['auth:sanctum']);
+Route::post('/delete-cart-item', [CartController::class, 'deleteCart'])->middleware(['auth:sanctum']);
 
 Route::resource('/products', ProductController::class);
 Route::resource('/blogs', BlogController::class);

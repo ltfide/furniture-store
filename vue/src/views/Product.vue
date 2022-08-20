@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="loading" class="text-center">Loading...</div>
+    <ProductLoading v-if="loading" />
     <section v-else class="container px-6 sm:px-40 my-10">
       <div class="block sm:flex gap-8">
         <!-- <div class="flex flex-col-reverse sm:flex-row gap-6"> -->
@@ -9,7 +9,7 @@
             <img class="w-14 sm:w-full border" src="img/chairs/3.jpg" alt="" />
           </div> -->
         <!-- </div> -->
-        <div class="max-h-96 w-[25rem] overflow-hidden">
+        <div class="max-h-96 w-96 overflow-hidden">
           <img
             class="border w-full h-full bg-cover object-cover"
             src="https://images.unsplash.com/photo-1592078615290-033ee584e267?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
@@ -90,7 +90,10 @@
               >
                 Beli
               </button>
-              <button class="w-1/2 py-2 rounded bg-green-600 text-white">
+              <button
+                @click="addCartBtn(product.id)"
+                class="w-1/2 py-2 rounded bg-green-600 text-white"
+              >
                 + Keranjang
               </button>
             </div>
@@ -120,6 +123,7 @@
 </template>
 
 <script setup>
+import ProductLoading from "../components/skeleton/ProductLoading.vue";
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import store from "../store";
@@ -130,6 +134,7 @@ const loading = computed(() => store.state.currentProduct.loading);
 
 // // Create empty survey
 let product = ref({
+  id: null,
   title: "",
   slug: "",
   price: null,
@@ -184,5 +189,11 @@ function addItem() {
 function minusItem() {
   count.value--;
   total.value = count.value * product.value.price;
+}
+
+function addCartBtn(id) {
+  const dataId = { id_product: id };
+  store.dispatch("addCartProduct", dataId);
+  store.dispatch("getUser");
 }
 </script>

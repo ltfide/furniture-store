@@ -84,9 +84,9 @@
         </div>
 
         <div>
-          <button
-            type="submit"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          <TButtonLoading
+            :loading="loading"
+            class="w-full relative justify-center"
           >
             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
               <LockClosedIcon
@@ -95,7 +95,7 @@
               />
             </span>
             Sign in
-          </button>
+          </TButtonLoading>
         </div>
       </form>
     </div>
@@ -103,6 +103,7 @@
 </template>
 
 <script setup>
+import TButtonLoading from "../components/core/TButtonLoading.vue";
 import { LockClosedIcon } from "@heroicons/vue/solid";
 import store from "../store";
 import { useRouter } from "vue-router";
@@ -113,17 +114,21 @@ const user = {
   email: "",
   password: "",
 };
+let loading = ref(false);
 let errorMsg = ref("");
 
 function login(ev) {
   ev.preventDefault();
 
+  loading.value = true;
   store
     .dispatch("login", user)
     .then(() => {
+      loading.value = false;
       router.push({ name: "Home" });
     })
     .catch((err) => {
+      loading.value = false;
       errorMsg.value = err.response.data.message;
     });
 }

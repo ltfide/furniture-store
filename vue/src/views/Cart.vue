@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Notification />
     <header class="border border-b-slate-300">
       <nav
         class="container px-4 sm:px-8 my-5 flex justify-between items-center"
@@ -33,16 +34,29 @@
               <input type="checkbox" />
               <img class="w-24" src="../img/chairs/1.jpg" alt="gambar" />
               <div class="w-full">
-                <h3 class="text-slate-700 text-base font-medium">
-                  {{ cart.title }}
-                </h3>
+                <router-link
+                  :to="{ name: 'ProductView', params: { slug: cart.slug } }"
+                >
+                  <h3 class="text-slate-700 text-base font-medium">
+                    {{ cart.title }}
+                  </h3>
+                </router-link>
                 <h5 class="text-sm text-slate-600 mb-3">color: Hitam</h5>
                 <div class="flex justify-between items-center">
                   <h3 class="text-slate-700 text-base font-medium">
                     Rp{{ cart.price }}
                   </h3>
-                  <div class="flex gap-7">
-                    <img src="../img/icons/delete.svg" alt="delete" />
+                  <div class="flex gap-7 items-center">
+                    <div
+                      @click="deleteCartItem(cart.id)"
+                      class="hover:bg-gray-200 rounded-full cursor-pointer inline"
+                    >
+                      <img
+                        class="p-2"
+                        src="../img/icons/delete.svg"
+                        alt="delete"
+                      />
+                    </div>
                     <div
                       class="my-4 border rounded border-green-600 inline-block px-3"
                     >
@@ -87,10 +101,20 @@
 </template>
 
 <script setup>
+import Notification from "../components/Notification.vue";
 import { computed } from "@vue/runtime-core";
 import store from "../store";
 
-const carts = computed(() => store.state.cart.data);
+let carts = computed(() => store.state.cart.data);
 
 store.dispatch("getProductCart");
+
+function deleteCartItem(id) {
+  const dataId = { id_product: id };
+  store.dispatch("deleteCartProduct", dataId).then((res) => {
+    store.dispatch("getProductCart");
+    return res;
+  });
+  console.log(id);
+}
 </script>

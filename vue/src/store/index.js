@@ -29,6 +29,11 @@ const store = createStore({
             loading: false,
             data: {},
         },
+        notification: {
+            show: false,
+            type: "success",
+            message: "",
+        },
     },
     actions: {
         increment({ commit }) {
@@ -58,13 +63,24 @@ const store = createStore({
                 commit("setUser", data);
             });
         },
-        getProductData({ commit }) {
+        getProductData({ commit }, { url = null } = {}) {
             commit("productLoading", true);
-            return axiosClient.get("/products").then((res) => {
+            url = url || "/products";
+            return axiosClient.get(url).then((res) => {
                 commit("productLoading", false);
                 commit("setProductData", res.data);
                 return res;
             });
+        },
+        getProductByCategory({ commit }, query) {
+            commit("productLoading", true);
+            return axiosClient
+                .get(`/products/?category=${query}`)
+                .then((res) => {
+                    commit("productLoading", false);
+                    commit("setProductData", res.data);
+                    return res;
+                });
         },
         getProduct({ commit }, slug) {
             commit("currentLoading", true);
@@ -84,9 +100,27 @@ const store = createStore({
         },
         getProductCart({ commit }) {
             commit("cartLoading", true);
-            return axiosClient.get("/product-cart").then((res) => {
+            return axiosClient.get("/carts").then((res) => {
                 commit("cartLoading", false);
                 commit("setProductCart", res.data.data[0]);
+                return res;
+            });
+        },
+        addCartProduct({ commit }, id) {
+            return axiosClient.post("/add-to-cart", id).then((res) => {
+                store.commit("notify", {
+                    type: "success",
+                    message: res.data.message,
+                });
+                return res;
+            });
+        },
+        deleteCartProduct({ commit }, id) {
+            return axiosClient.post("/delete-cart-item", id).then((res) => {
+                store.commit("notify", {
+                    type: "success",
+                    message: res.data.message,
+                });
                 return res;
             });
         },
@@ -130,6 +164,14 @@ const store = createStore({
         },
         setProductCart: (state, data) => {
             state.cart.data = data;
+        },
+        notify: (state, { message, type }) => {
+            state.notification.show = true;
+            state.notification.type = type;
+            state.notification.message = message;
+            setTimeout(() => {
+                state.notification.show = false;
+            }, 3000);
         },
     },
 });

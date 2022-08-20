@@ -1,5 +1,6 @@
 <template>
   <section class="mt-20">
+    <pre>{{ categories }}</pre>
     <div
       class="container px-4 sm:px-8"
       data-aos="zoom-in-up"
@@ -11,25 +12,34 @@
         </h2>
         <div class="">
           <ul class="hidden sm:flex">
-            <li
-              class="text-slate-500 text-base cursor-pointer hover:bg-slate-100 py-1 px-5 hover:text-green-500"
-            >
-              All
+            <li>
+              <a
+                href="#"
+                @click="getProductByCategory"
+                class="text-slate-500 text-base cursor-pointer hover:bg-slate-100 py-1 px-5 hover:text-green-500 block"
+                >All</a
+              >
             </li>
             <li
               class="text-slate-500 text-base cursor-pointer hover:bg-slate-100 py-1 px-5 hover:text-green-500"
             >
-              Chairs
+              <button @click="getProductByCategory($event, 'chair')">
+                Chairs
+              </button>
             </li>
             <li
               class="text-slate-500 text-base cursor-pointer hover:bg-slate-100 py-1 px-5 hover:text-green-500"
             >
-              Sofas
+              <button @click="getProductByCategory($event, 'sofa')">
+                Sofas
+              </button>
             </li>
             <li
               class="text-slate-500 text-base cursor-pointer hover:bg-slate-100 py-1 px-5 hover:text-green-500"
             >
-              Accessories
+              <button @click="getProductByCategory($event, 'accessories')">
+                Accessories
+              </button>
             </li>
           </ul>
         </div>
@@ -44,40 +54,54 @@
         </div>
       </div>
       <div v-else class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div v-for="product in products.data" :key="product.id">
+        <div
+          class="block p-2 hover:shadow transition cursor-pointer hover:scale-110 relative group"
+          v-for="product in products.data"
+          :key="product.id"
+        >
           <router-link
             :to="{ name: 'ProductView', params: { slug: product.slug } }"
-            class="block p-2 hover:shadow transition cursor-pointer hover:scale-110 relative group"
           >
             <img src="./../img/product-1.jpg" alt="product" />
-            <h2 class="mt-3 text-slate-600 text-base">{{ product.title }}</h2>
-            <p class="text-slate-800 font-bold my-1">$ {{ product.price }}</p>
-            <div class="flex justify-between items-center">
-              <!-- <button class="py-[7px] px-4 bg-green-600 inline-block text-xs text-slate-200 rounded shadow hover:bg-green-500 cursor-pointer">ADD TO CART</button> -->
-              <div class="flex items-center gap-2">
-                <img
-                  class="w-3 sm:w-5"
-                  src="./../img/icons/star.svg"
-                  alt="star"
-                />
-                <span class="text-xs sm:text-sm text-slate-500"
-                  >4.9 | Terjual {{ product.sold }}+</span
-                >
-              </div>
-              <div class="flex gap-2">
-                <img
-                  class="w-6 cursor-pointer absolute top-4 right-4 hidden group-hover:block"
-                  src="./../img/icons/love.svg"
-                  alt="love"
-                />
-                <img
-                  class="w-6 cursor-pointer hidden group-hover:block"
-                  src="./../img/icons/cart.svg"
-                  alt="love"
-                />
-              </div>
-            </div>
           </router-link>
+          <div class="absolute top-0 px-4 py-1 text-slate-700 bg-green-200">
+            {{ product.category.name }}
+          </div>
+          <router-link
+            :to="{ name: 'ProductView', params: { slug: product.slug } }"
+          >
+            <h2
+              class="mt-3 text-slate-600 text-base group-hover:text-green-500"
+            >
+              {{ product.title }}
+            </h2>
+          </router-link>
+
+          <p class="text-slate-800 font-bold my-1 cursor-default">
+            $ {{ product.price }}
+          </p>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-2 cursor-default">
+              <img
+                class="w-3 sm:w-5"
+                src="./../img/icons/star.svg"
+                alt="star"
+              />
+              <span class="text-xs sm:text-sm text-slate-500"
+                >4.9 | Terjual {{ product.sold }}+</span
+              >
+            </div>
+            <div
+              class="flex gap-2 hover:bg-gray-200 rounded-full p-2"
+              @click="addCartBtn(product.id)"
+            >
+              <img
+                class="w-6 cursor-pointer hidden group-hover:block"
+                src="./../img/icons/cart.svg"
+                alt="love"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -94,4 +118,18 @@ const loading = computed(() => store.state.products.loading);
 const products = computed(() => store.state.products.data);
 
 store.dispatch("getProductData");
+
+function addCartBtn(id) {
+  const dataId = { id_product: id };
+  store.dispatch("addCartProduct", dataId);
+  store.dispatch("getUser");
+}
+
+function getProductByCategory(ev, query) {
+  ev.preventDefault();
+  console.log(query);
+  store.dispatch("getProductData", {
+    url: query != undefined ? `products/?category=${query}` : "",
+  });
+}
 </script>
