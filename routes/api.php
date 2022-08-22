@@ -33,7 +33,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware(['auth:san
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/carts', [CartController::class, 'index'])->middleware(['auth:sanctum']);
+Route::get('/carts', [CartController::class, 'getAllCart'])->middleware(['auth:sanctum']);
+Route::get('/cart-notification', [CartController::class, 'cartNotification'])->middleware(['auth:sanctum']);
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->middleware(['auth:sanctum']);
 Route::post('/delete-cart-item', [CartController::class, 'deleteCart'])->middleware(['auth:sanctum']);
 

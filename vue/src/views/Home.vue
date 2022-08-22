@@ -1,6 +1,5 @@
 <template>
   <div>
-    <pre>{{ user }}</pre>
     <div class="bg-gray-200">
       <div
         class="container block md:flex justify-between items-center"

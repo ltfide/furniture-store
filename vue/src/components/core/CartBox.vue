@@ -8,7 +8,7 @@
     <div
       class="absolute -top-2 -right-3 bg-red-500 text-white text-sm border-2 border-white w-6 h-6 text-center rounded-full"
     >
-      {{ props.totalCart || 0 }}
+      {{ props.totalCart }}
     </div>
     <div
       v-if="cartLoading"
@@ -45,12 +45,12 @@
         >
           <img
             class="max-h-10 rounded"
-            src="https://images.unsplash.com/photo-1592078615290-033ee584e267?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
+            :src="cart.data.product_image"
             alt="img"
           />
           <div class="text-slate-600 text-sm">
-            <h3>{{ cart.title }}</h3>
-            <h5 class="text-green-500">Rp{{ cart.price }}</h5>
+            <h3>{{ cart.data.title }}</h3>
+            <h5 class="text-green-500">Rp{{ cart.data.price }}</h5>
           </div>
         </router-link>
       </div>

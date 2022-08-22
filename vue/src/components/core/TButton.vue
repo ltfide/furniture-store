@@ -17,7 +17,7 @@ const props = defineProps({
   // indigo, 'red'
   color: {
     type: String,
-    default: "indigo",
+    default: "green",
   },
   to: [Object, String],
   href: String,

@@ -17,6 +17,7 @@ const store = createStore({
             loading: false,
             data: {},
         },
+        totalCart: 0,
         cart: {
             loading: false,
             data: {},
@@ -100,9 +101,21 @@ const store = createStore({
         },
         getProductCart({ commit }) {
             commit("cartLoading", true);
-            return axiosClient.get("/carts").then((res) => {
-                commit("cartLoading", false);
-                commit("setProductCart", res.data.data[0]);
+            return axiosClient
+                .get("/carts")
+                .then((res) => {
+                    commit("cartLoading", false);
+                    commit("setProductCart", res.data.data);
+                    return res;
+                })
+                .catch((error) => {
+                    commit("cartLoading", false);
+                    return error;
+                });
+        },
+        getCartNotification({ commit }) {
+            return axiosClient.get("/cart-notification").then((res) => {
+                commit("setTotalCart", res.data);
                 return res;
             });
         },
@@ -158,6 +171,9 @@ const store = createStore({
         },
         setBlogData: (state, data) => {
             state.blogs.data = data;
+        },
+        setTotalCart: (state, data) => {
+            state.totalCart = data;
         },
         cartLoading: (state, data) => {
             state.cart.loading = data;

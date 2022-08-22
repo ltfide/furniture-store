@@ -32,23 +32,28 @@
               class="mt-3 flex gap-3 items-center border-b border-gray-300 pb-3"
             >
               <input type="checkbox" />
-              <img class="w-24" src="../img/chairs/1.jpg" alt="gambar" />
+              <img class="w-24" :src="cart.data.product_image" alt="gambar" />
               <div class="w-full">
                 <router-link
-                  :to="{ name: 'ProductView', params: { slug: cart.slug } }"
+                  :to="{
+                    name: 'ProductView',
+                    params: { slug: cart.data.slug },
+                  }"
                 >
                   <h3 class="text-slate-700 text-base font-medium">
-                    {{ cart.title }}
+                    {{ cart.data.title }}
                   </h3>
                 </router-link>
-                <h5 class="text-sm text-slate-600 mb-3">color: Hitam</h5>
+                <h5 class="text-sm text-slate-600 mb-3">
+                  {{ cart.quantity }} barang
+                </h5>
                 <div class="flex justify-between items-center">
-                  <h3 class="text-slate-700 text-base font-medium">
-                    Rp{{ cart.price }}
+                  <h3 class="text-green-600 text-base font-medium">
+                    Rp{{ cart.data.price }}
                   </h3>
                   <div class="flex gap-7 items-center">
                     <div
-                      @click="deleteCartItem(cart.id)"
+                      @click="deleteCartItem(cart.data.id)"
                       class="hover:bg-gray-200 rounded-full cursor-pointer inline"
                     >
                       <img
@@ -64,7 +69,7 @@
                       <input
                         class="text-center"
                         size="1"
-                        value="0"
+                        :value="cart.quantity"
                         type="text"
                       />
                       <span>+</span>
@@ -110,7 +115,7 @@ let carts = computed(() => store.state.cart.data);
 store.dispatch("getProductCart");
 
 function deleteCartItem(id) {
-  const dataId = { id_product: id };
+  const dataId = { product_id: id };
   store.dispatch("deleteCartProduct", dataId).then((res) => {
     store.dispatch("getProductCart");
     return res;

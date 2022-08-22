@@ -1,6 +1,5 @@
 <template>
   <section class="mt-20">
-    <pre>{{ categories }}</pre>
     <div
       class="container px-4 sm:px-8"
       data-aos="zoom-in-up"
@@ -62,7 +61,11 @@
           <router-link
             :to="{ name: 'ProductView', params: { slug: product.slug } }"
           >
-            <img src="./../img/product-1.jpg" alt="product" />
+            <img
+              class="max-h-64 bg-cover bg-center w-full"
+              :src="product.image"
+              alt="product"
+            />
           </router-link>
           <div class="absolute top-0 px-4 py-1 text-slate-700 bg-green-200">
             {{ product.category.name }}

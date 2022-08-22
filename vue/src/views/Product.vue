@@ -12,7 +12,7 @@
         <div class="max-h-96 w-96 overflow-hidden">
           <img
             class="border w-full h-full bg-cover object-cover"
-            src="https://images.unsplash.com/photo-1592078615290-033ee584e267?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
+            :src="product.image"
             alt=""
           />
         </div>
@@ -125,11 +125,11 @@
 <script setup>
 import ProductLoading from "../components/skeleton/ProductLoading.vue";
 import { computed, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import store from "../store";
 
 const route = useRoute();
-
+const router = useRouter();
 const loading = computed(() => store.state.currentProduct.loading);
 
 // // Create empty survey
@@ -137,6 +137,7 @@ let product = ref({
   id: null,
   title: "",
   slug: "",
+  image: "",
   price: null,
   discount: null,
   stock: null,
@@ -192,8 +193,14 @@ function minusItem() {
 }
 
 function addCartBtn(id) {
-  const dataId = { id_product: id };
+  if (!sessionStorage.getItem("TOKEN")) {
+    router.push({ name: "Login" });
+  }
+  const dataId = {
+    quantity: count.value,
+    product_id: id,
+  };
   store.dispatch("addCartProduct", dataId);
-  store.dispatch("getUser");
+  store.dispatch("getCartNotification");
 }
 </script>

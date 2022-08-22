@@ -5,18 +5,8 @@
     <div class="max-w-md w-full space-y-8">
       <div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Sign in to your account
+          Masuk ke Akunmu
         </h2>
-        <p class="mt-2 text-center text-sm text-gray-600">
-          Or
-          {{ " " }}
-          <router-link
-            to="/register"
-            class="font-medium text-indigo-600 hover:text-indigo-500"
-          >
-            Register for free
-          </router-link>
-        </p>
       </div>
       <div
         v-if="errorMsg"
@@ -60,25 +50,10 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <input
-              id="remember-me"
-              name="remember-me"
-              type="checkbox"
-              class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-            />
-            <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-              Remember me
-            </label>
-          </div>
-
+        <div class="flex items-center justify-end">
           <div class="text-sm">
-            <a
-              href="#"
-              class="font-medium text-indigo-600 hover:text-indigo-500"
-            >
-              Forgot your password?
+            <a href="#" class="font-medium text-green-600 hover:text-green-500">
+              Lupa Password ?
             </a>
           </div>
         </div>
@@ -90,12 +65,22 @@
           >
             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
               <LockClosedIcon
-                class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
+                class="h-5 w-5 text-green-400 group-hover:text-green-300"
                 aria-hidden="true"
               />
             </span>
-            Sign in
+            Masuk
           </TButtonLoading>
+        </div>
+
+        <div class="text-center">
+          Belum punya akun ?
+          <router-link
+            to="/register"
+            class="font-medium text-green-600 hover:text-green-500"
+          >
+            Daftar
+          </router-link>
         </div>
       </form>
     </div>

@@ -20,6 +20,7 @@ class ProductFactory extends Factory
             'title' => fake()->name(),
             'slug' => fake()->slug(),
             'price' => fake()->numberBetween(100,1000000),
+            'product_image' => 'http://localhost:8000/img/chair.jpg',
             'discount' => 10,
             'stock' => 100,
             'sold' => 5,

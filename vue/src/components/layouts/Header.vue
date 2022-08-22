@@ -99,7 +99,7 @@
           alt="search"
         />
         <img class="w-3 sm:w-5" src="./../../img/icons/love-2.svg" alt="love" />
-        <CartBox :totalCart="user.cart" />
+        <CartBox :totalCart="cartNotification" />
       </div>
     </nav>
   </header>
@@ -113,8 +113,10 @@ import CartBox from "../core/CartBox.vue";
 
 const router = useRouter();
 const user = computed(() => store.state.user.data);
+const cartNotification = computed(() => store.state.totalCart);
 
 store.dispatch("getUser");
+store.dispatch("getCartNotification");
 
 function logout(ev) {
   ev.preventDefault();

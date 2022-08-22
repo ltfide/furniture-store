@@ -4,7 +4,7 @@
     :disabled="loading"
     :class="{
       'cursor-not-allowed': loading,
-      'hover:bg-indigo-500': loading,
+      'hover:bg-emerald-400': loading,
     }"
   >
     <svg
