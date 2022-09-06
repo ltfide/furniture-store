@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,13 +21,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    $user = User::find(Auth::id());
-    return response([
-        'name' => $user->name,
-        'email' => $user->email,
-        'cart' => count($user->products)
-    ]); 
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     $user = User::find(Auth::id());
+//     return response([
+//         'name' => $user->name,
+//         'email' => $user->email,
+//         'cart' => count($user->products)
+//     ]); 
+// });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user-profile', [UserController::class, 'index']);
+    Route::put('/update-profile', [UserController::class, 'updateProfile']);
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum']);

@@ -25,7 +25,7 @@ class CartController extends Controller
 
     public function cartNotification()
     {
-        $allCart = Cart::where('user_id', Auth::id())->count();
+        $allCart = Cart::where('user_id', Auth::id())->sum('carts.quantity');
         return $allCart;
     }
 

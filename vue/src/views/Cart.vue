@@ -20,7 +20,8 @@
 
     <section class="mt-6">
       <div class="container sm:px-32 flex gap-8">
-        <div class="p-3 bg-gray-50 rounded w-[70%]">
+        <Loader v-if="cartsLoading" class="w-[70%] mx-auto text-center" />
+        <div v-else class="p-3 bg-gray-50 rounded w-[70%]">
           <div class="flex gap-3 border-b border-gray-300 pb-2 items-center">
             <input type="checkbox" name="all" id="checkbox" />
             <label for="checkbox" class="text-base text-slate-600"
@@ -106,10 +107,12 @@
 </template>
 
 <script setup>
+import Loader from "../components/core/Loader.vue";
 import Notification from "../components/Notification.vue";
 import { computed } from "@vue/runtime-core";
 import store from "../store";
 
+const cartsLoading = computed(() => store.state.cart.loading);
 let carts = computed(() => store.state.cart.data);
 
 store.dispatch("getProductCart");

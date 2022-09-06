@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import DefaultLayout from "../components/DefaultLayout.vue";
 import Product from "../views/Product.vue";
 import Blog from "../views/BlogView.vue";
+import UserSettings from "../views/UserSettings.vue";
 import Cart from "../views/Cart.vue";
 import review from "../views/review.vue";
 import view from "../views/view.vue";
@@ -24,6 +25,11 @@ const routes = [
                 path: "/",
                 name: "Home",
                 component: lazyLoad("Home"),
+            },
+            {
+                path: "/user/settings",
+                name: "UserSettings",
+                component: UserSettings,
             },
             { path: "/product/:slug", name: "ProductView", component: Product },
             { path: "/blog/:slug", name: "BlogView", component: Blog },

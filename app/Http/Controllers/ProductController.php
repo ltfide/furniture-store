@@ -5,16 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
-use App\Http\Resources\CartResource;
 use App\Http\Resources\ProductResource;
-use App\Models\Category;
-use App\Models\User;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
+    private ProductService $productService;
+
+    public function __construct(ProductService $productService) {
+        $this->productService = $productService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,16 +25,20 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = Product::latest()->paginate(4);
-        if ($request->query('category')) {
-            $products = Product::join('categories', 'category_id', '=', 'categories.id')
-                                ->where('categories.name', $request->query('category'))
-                                ->select('products.*')
-                                ->limit(4)
-                                ->latest()
-                                ->get();
+        $keyword = $request->query('category');
+
+        try {
+            $data = $this->productService->getAllProduct($keyword);
+            return response([
+                'status' => 'Success',
+                'data' => ProductResource::collection($data)
+            ], Response::HTTP_OK);
+        } catch(\Exception $exception) {
+            return response([
+                'status' => 400,
+                'message' => $exception->getMessage()
+            ]);
         }
-        return ProductResource::collection($products);
     }
 
     /**
@@ -41,8 +48,8 @@ class ProductController extends Controller
      */
     public function getProductByCategory(Request $request)
     {
-        $products = Category::where('name', $request->query('category'))->get();
-        return $products;
+        // $products = Category::where('name', $request->query('category'))->get();
+        // return $products;
     }
 
     /**

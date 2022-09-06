@@ -60,8 +60,14 @@ const store = createStore({
             });
         },
         getUser({ commit }) {
-            return axiosClient.get("/user").then(({ data }) => {
+            return axiosClient.get("/user-profile").then(({ data }) => {
                 commit("setUser", data);
+            });
+        },
+        updateProfile({ commit }, user) {
+            return axiosClient.put("/update-profile", user).then((res) => {
+                commit("setUser", res.data.data);
+                return res.data;
             });
         },
         getProductData({ commit }, { url = null } = {}) {

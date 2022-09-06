@@ -41,7 +41,7 @@
       <div v-for="cart in carts" :key="cart.id">
         <router-link
           to="/cart"
-          class="flex gap-4 items-center px-2 py-1 border-t border-gray-300 hover:bg-gray-100"
+          class="relative flex gap-4 items-center px-2 py-1 border-t border-gray-300 hover:bg-gray-100"
         >
           <img
             class="max-h-10 rounded"
@@ -51,6 +51,9 @@
           <div class="text-slate-600 text-sm">
             <h3>{{ cart.data.title }}</h3>
             <h5 class="text-green-500">Rp{{ cart.data.price }}</h5>
+          </div>
+          <div class="absolute top-1/2 right-4 -translate-y-1/2 text-slate-600">
+            ({{ cart.quantity }})
           </div>
         </router-link>
       </div>

@@ -24,7 +24,11 @@
               >
                 <ul class="flex flex-col">
                   <li class="hover:bg-gray-200 px-4 py-2">Pesanan saya</li>
-                  <li class="hover:bg-gray-200 px-4 py-2">Pengaturan akun</li>
+                  <li class="hover:bg-gray-200 px-4 py-2">
+                    <router-link :to="{ name: 'UserSettings' }">
+                      Pengaturan akun
+                    </router-link>
+                  </li>
                   <li class="hover:bg-gray-200 px-4 py-2">
                     <a href="" @click="logout">Logout</a>
                   </li>
