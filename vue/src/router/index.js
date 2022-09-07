@@ -4,6 +4,7 @@ import Product from "../views/Product.vue";
 import Blog from "../views/BlogView.vue";
 import UserSettings from "../views/UserSettings.vue";
 import Cart from "../views/Cart.vue";
+import Coba from "../views/Coba.vue";
 import review from "../views/review.vue";
 import view from "../views/view.vue";
 import Login from "../views/Login.vue";
@@ -62,6 +63,11 @@ const routes = [
                 component: Register,
             },
         ],
+    },
+    {
+        path: "/coba",
+        name: "Coba",
+        component: Coba,
     },
 ];
 

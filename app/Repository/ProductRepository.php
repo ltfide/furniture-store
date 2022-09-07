@@ -19,7 +19,7 @@ class ProductRepository
 
    public function getAll()
    {
-      $products = Product::latest()->paginate(4);
+      $products = Product::latest()->paginate(10);
       return $products;
    }
 }

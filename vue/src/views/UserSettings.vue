@@ -18,6 +18,7 @@
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           placeholder=" "
           v-model="userProfile.name"
+          :disabled="!isSaved"
         />
         <label
           for="name"
@@ -33,6 +34,7 @@
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           placeholder=" "
           v-model="userProfile.date_of_birth"
+          :disabled="!isSaved"
         />
         <label
           for="date_of_birth"
@@ -48,6 +50,7 @@
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           placeholder=" "
           v-model="userProfile.gender"
+          :disabled="!isSaved"
         />
         <label
           for="gender"
@@ -62,6 +65,7 @@
           class="block py-3.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           rows="2"
           v-model="userProfile.address"
+          :disabled="!isSaved"
         ></textarea>
         <label
           for="address"
@@ -72,12 +76,13 @@
       <div class="grid md:grid-cols-2 md:gap-6">
         <div class="relative z-0 mb-6 w-full group">
           <input
-            type="text"
+            type="email"
             name="floating_first_name"
             id="floating_first_name"
             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=" "
             v-model="userProfile.email"
+            :disabled="!isSaved"
           />
           <label
             for="floating_first_name"
@@ -93,6 +98,7 @@
             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=" "
             v-model="userProfile.phone_number"
+            :disabled="!isSaved"
           />
           <label
             for="floating_last_name"
@@ -103,9 +109,20 @@
       </div>
       <button
         type="submit"
-        class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        class="text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2 text-center"
+        :class="[isSaved ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-300']"
+        :disabled="!isSaved"
       >
-        Submit
+        Save
+      </button>
+      <button
+        type="button"
+        class="text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2 text-center mt-2 sm:mt-0 sm:ml-3"
+        :class="[isSaved ? 'bg-gray-300' : 'bg-green-600 hover:bg-green-700']"
+        :disabled="isSaved"
+        @click="isSaved = !isSaved"
+      >
+        Edit
       </button>
     </form>
   </div>
@@ -117,6 +134,7 @@ import Swal from "sweetalert2";
 import store from "../store";
 
 let userProfile = ref({});
+const isSaved = ref(false);
 
 store.dispatch("getUser");
 
@@ -133,7 +151,7 @@ watch(
 function saveProfile() {
   console.log("ok");
   store.dispatch("updateProfile", userProfile.value).then((res) => {
-    console.log(res);
+    isSaved.value = false;
     Swal.mixin({
       toast: true,
       position: "top-end",

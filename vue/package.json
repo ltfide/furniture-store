@@ -14,6 +14,7 @@
     "sweetalert2": "^11.4.30",
     "vue": "^3.2.25",
     "vue-router": "^4.0.13",
+    "vueperslides": "^3.4.2",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

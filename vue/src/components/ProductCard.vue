@@ -52,13 +52,27 @@
           </div>
         </div>
       </div>
-      <div v-else class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div
+      <div v-else class="mt-4">
+        <!-- <div
           class="block p-2 hover:shadow transition cursor-pointer hover:scale-110 relative group"
           v-for="product in products.data"
           :key="product.id"
+        > -->
+        <vueper-slides
+          class="bg-white no-shadow w-full"
+          :touchable="false"
+          :visible-slides="4"
+          slide-multiple
+          :gap="2"
         >
-          <router-link
+          <vueper-slide
+            v-for="product in products.data"
+            :key="product.id"
+            :content="template(product)"
+            class="block"
+          />
+        </vueper-slides>
+        <!-- <router-link
             :to="{ name: 'ProductView', params: { slug: product.slug } }"
           >
             <img
@@ -104,14 +118,15 @@
                 alt="love"
               />
             </div>
-          </div>
-        </div>
+          </div> -->
+        <!-- </div> -->
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
+import { VueperSlides, VueperSlide } from "vueperslides";
 import { computed } from "@vue/runtime-core";
 import { useStore } from "vuex";
 
@@ -134,5 +149,51 @@ function getProductByCategory(ev, query) {
   store.dispatch("getProductData", {
     url: query != undefined ? `products/?category=${query}` : "",
   });
+}
+
+function template(product) {
+  return `<div class="max-h-64 overflow-hidden">
+            <a href="https://www.google.com">
+              <img
+              class="bg-cover bg-center h-full w-full hover:scale-110 transition "
+              src="${product.image}"
+              alt="product"
+            />
+            </a> 
+          </div>
+          <div class="absolute top-0 px-4 py-1 text-slate-700 bg-green-200">
+            ${product.category.name}
+          </div>
+            <h2
+              class="mt-3 text-slate-600 text-base group-hover:text-green-500"
+            >
+              ${product.title}
+            </h2>
+
+          <p class="text-slate-800 font-bold my-1 cursor-default">
+            $ ${product.price}
+          </p>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-2 cursor-default">
+              <img
+                class="w-3 sm:w-5"
+                src="http://localhost:3000/src/img/icons/star.svg"
+                alt="star"
+              />
+              <span class="text-xs sm:text-sm text-slate-500"
+                >4.9 | Terjual ${product.sold}+</span
+              >
+            </div>
+            <div
+              class="flex gap-2 hover:bg-gray-200 rounded-full p-2"
+              @click="addCartBtn(product.id)"
+            >
+              <img
+                class="w-6 cursor-pointer hidden group-hover:block"
+                src="./../img/icons/cart.svg"
+                alt="love"
+              />
+            </div>
+          </div>`;
 }
 </script>
